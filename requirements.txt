@@ -1,0 +1,50 @@
+﻿# Web Framework
+fastapi==0.109.0
+uvicorn[standard]==0.27.0
+pydantic==2.5.3
+pydantic-settings==2.1.0
+
+# AI/LLM
+langchain==0.1.0
+langchain-openai==0.0.2
+langgraph==0.0.20
+openai==1.10.0
+
+# Windows Integration
+pywinrm==0.4.3
+pypsrp==0.8.1
+requests-ntlm==1.2.0
+
+# ServiceNow Integration
+pysnow==0.7.17
+requests==2.31.0
+
+# Email
+imapclient==2.3.1
+email-validator==2.1.0
+
+# Database
+sqlalchemy==2.0.25
+alembic==1.13.1
+psycopg2-binary==2.9.9
+redis==5.0.1
+
+# Security
+cryptography==42.0.0
+python-jose[cryptography]==3.3.0
+azure-keyvault-secrets==4.7.0
+azure-identity==1.15.0
+
+# Monitoring
+prometheus-client==0.19.0
+python-json-logger==2.0.7
+
+# Notifications
+slack-sdk==3.26.2
+pymsteams==0.2.2
+
+# Utilities
+python-dotenv==1.0.0
+pyyaml==6.0.1
+tenacity==8.2.3
+schedule==1.2.0
