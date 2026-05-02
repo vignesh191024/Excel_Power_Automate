@@ -1,211 +1,377 @@
-# Windows Service Remediation - AI Agent
+# OneDrive Shift Files Automation - Complete Documentation
 
-An intelligent, multi-channel AI agent system that automatically detects and remediates Windows service failures by monitoring ServiceNow tickets, eliminating manual intervention for common service restart scenarios.
+## 📋 Overview
 
-## 🎯 Overview
+This project provides a complete solution for automating the creation of shift-based Excel files in OneDrive using Power Automate. The system automatically generates three shift files daily, organized in a hierarchical folder structure by month and date.
 
-This system monitors ServiceNow tickets through multiple channels (API, Email, Webhook) and uses AI to automatically:
-- Parse ticket descriptions to extract server and service information
-- Connect to Windows servers via WinRM
-- Check service status and restart if needed
-- Update tickets with remediation results
-- Log all actions for audit purposes
+## 🎯 What This System Does
 
-## 🏗️ Architecture
+**Automated File Generation**:
+- Creates monthly folders (e.g., "May", "June")
+- Creates daily folders with format `DD_Month_YYYY` (e.g., "01_May_2026")
+- Generates 3 shift files per day at scheduled times:
+  - **Shift 1**: 6:00 AM IST
+  - **Shift 2**: 2:00 PM IST
+  - **Shift 3**: 10:00 PM IST
 
-The system uses a multi-channel approach with AI-powered decision making:
+**Example Output Structure**:
+```
+OneDrive/Shift_Files/
+└── May/
+    └── 01_May_2026/
+        ├── May_India_Shift_1_01-May-2026.xlsx
+        ├── May_India_Shift_2_01-May-2026.xlsx
+        └── May_India_Shift_3_01-May-2026.xlsx
+```
 
-- **Input Channels**: ServiceNow API, Email Monitor, Webhook Receiver
-- **AI Core**: LLM-based ticket parsing, Decision engine, LangGraph orchestration
-- **Execution**: PowerShell remoting via WinRM
-- **Monitoring**: Prometheus metrics, Grafana dashboards
+## 📚 Documentation Files
 
-See [`windows-service-remediation-plan.md`](windows-service-remediation-plan.md) for detailed architecture.
+This repository contains comprehensive documentation for implementing and maintaining the automation system:
 
-## 📋 Documentation
+### 1. **OneDrive_Shift_Files_Automation_Plan.md**
+   - Complete system architecture and design
+   - Detailed explanation of all 5 Power Automate flows
+   - Power Automate expressions and formulas
+   - Troubleshooting guide
+   - Alternative approaches and recommendations
+   - Cost considerations
+   - Security and permissions
 
-- **[Architecture Plan](windows-service-remediation-plan.md)** - Complete system design and architecture
-- **[Project Structure](project-structure.md)** - Technical specifications and code structure
-- **[Implementation Guide](implementation-guide.md)** - Step-by-step implementation instructions
+### 2. **Power_Automate_Flow_Configurations.md**
+   - Step-by-step configuration for each flow
+   - Detailed action-by-action instructions
+   - Testing procedures
+   - Error handling setup
+   - Quick reference for expressions
+
+### 3. **Quick_Reference_Guide.md**
+   - Visual diagrams and flowcharts
+   - Daily timeline
+   - Naming conventions
+   - Common tasks
+   - Troubleshooting quick fixes
+   - Monitoring dashboard
+   - Maintenance checklist
+
+### 4. **Implementation_Checklist.md**
+   - Phase-by-phase implementation guide
+   - Checkboxes for tracking progress
+   - Testing procedures
+   - Deployment steps
+   - Training and handover
+   - Sign-off section
+
+### 5. **Using_Existing_Template_Guide.md** ⭐ NEW
+   - How to use your existing HO template file
+   - Template preparation steps
+   - Upload instructions
+   - Testing procedures
+   - Troubleshooting template issues
+   - Template maintenance guide
 
 ## 🚀 Quick Start
 
 ### Prerequisites
+- Microsoft 365 account with OneDrive for Business
+- Power Automate Premium license (or included in M365)
+- Appropriate permissions for OneDrive and Power Automate
+- **Your existing HO template file** ✅
 
-- Python 3.11+
-- ServiceNow instance with API access
-- Windows servers with WinRM enabled
-- OpenAI API key (or Azure OpenAI)
+### Implementation Steps
 
-### Installation
+1. **Read the Documentation**
+   - Start with [`OneDrive_Shift_Files_Automation_Plan.md`](OneDrive_Shift_Files_Automation_Plan.md)
+   - Review the architecture and approach
 
-```bash
-# Clone repository
-git clone <repository-url>
-cd windows-service-remediation
+2. **Prepare Your HO Template**
+   - Follow [`Using_Existing_Template_Guide.md`](Using_Existing_Template_Guide.md)
+   - Upload your HO template to OneDrive
+   - Verify template works correctly
 
-# Create virtual environment
-python -m venv venv
-source venv/bin/activate  # On Windows: venv\Scripts\activate
+3. **Prepare Your Environment**
+   - Create folder structure in OneDrive: `/Shift_Files/Templates/`
+   - Upload your HO template file
+   - Verify template is accessible
 
-# Install dependencies
-pip install -r requirements.txt
+4. **Create the Flows**
+   - Follow [`Power_Automate_Flow_Configurations.md`](Power_Automate_Flow_Configurations.md)
+   - Create all 5 flows step-by-step
+   - Test each flow individually
 
-# Configure environment
-cp .env.example .env
-# Edit .env with your credentials
-```
+5. **Test and Deploy**
+   - Use [`Implementation_Checklist.md`](Implementation_Checklist.md)
+   - Complete all testing phases
+   - Enable flows for production
 
-### Configuration
+6. **Monitor and Maintain**
+   - Use [`Quick_Reference_Guide.md`](Quick_Reference_Guide.md)
+   - Follow maintenance schedule
+   - Address issues promptly
 
-1. Set up environment variables in `.env`:
-```env
-SNOW_INSTANCE_URL=https://yourinstance.service-now.com
-SNOW_USERNAME=your_username
-SNOW_PASSWORD=your_password
-OPENAI_API_KEY=sk-your-key-here
-WIN_USERNAME=domain\serviceaccount
-WIN_PASSWORD=your_password
-```
+## 🏗️ System Architecture
 
-2. Configure services in `config.yaml`:
-```yaml
-servers:
-  - hostname: "prod-app-01.domain.com"
-    services:
-      - name: "DatadogAgent"
-        restart_allowed: true
-```
+### Five Power Automate Flows
 
-3. Enable WinRM on target servers:
-```powershell
-Enable-PSRemoting -Force
-Set-Item WSMan:\localhost\Client\TrustedHosts -Value "*" -Force
-Restart-Service WinRM
-```
+1. **Monthly Folder Creator**
+   - Runs: 1st of each month at 12:01 AM IST
+   - Creates: Month folder (e.g., "May")
 
-### Running the Agent
+2. **Daily Folder Creator**
+   - Runs: Every day at 12:05 AM IST
+   - Creates: Daily folder (e.g., "01_May_2026")
 
-```bash
-# Run the agent
-python main.py
+3. **Shift 1 File Generator**
+   - Runs: Every day at 6:00 AM IST
+   - Creates: Shift 1 Excel file from your HO template
 
-# Or with Docker
-docker-compose up -d
-```
+4. **Shift 2 File Generator**
+   - Runs: Every day at 2:00 PM IST
+   - Creates: Shift 2 Excel file from your HO template
 
-## 📊 Features
+5. **Shift 3 File Generator**
+   - Runs: Every day at 10:00 PM IST
+   - Creates: Shift 3 Excel file from your HO template
 
-### Current Features (MVP)
-- ✅ ServiceNow API integration
-- ✅ AI-powered ticket parsing (GPT-4)
-- ✅ Windows service management via WinRM
-- ✅ Automatic service restart
-- ✅ Ticket status updates
-- ✅ Basic logging
+### Why This Approach?
 
-### Planned Features
-- 🔄 Email monitoring
-- 🔄 Webhook receiver
-- 🔄 LangGraph orchestration
-- 🔄 Azure Key Vault integration
-- 🔄 Prometheus metrics
-- 🔄 Grafana dashboards
-- 🔄 Slack/Teams notifications
-- 🔄 Approval workflows
+✅ **Reliability**: Each flow handles one specific task  
+✅ **Maintainability**: Easy to troubleshoot individual components  
+✅ **Flexibility**: Can modify or disable individual flows  
+✅ **Scalability**: Easy to add more shifts or modify schedules  
+✅ **No Coding Required**: Uses Power Automate's visual designer  
+✅ **Uses Your Existing Template**: Preserves your HO file formatting and formulas
 
-## 🔒 Security
+## 🔧 Key Features
 
-- Credentials stored in Azure Key Vault or environment variables
-- WinRM connections use NTLM/Kerberos authentication
-- Service accounts with least privilege
-- Comprehensive audit logging
-- Signature validation for webhooks
+- **Automatic Folder Creation**: Monthly and daily folders created automatically
+- **Template-Based Files**: All files copied from your existing HO template
+- **Duplicate Prevention**: Checks if files exist before creating
+- **Error Handling**: Robust error handling with notifications
+- **Time Zone Support**: Properly handles India Standard Time (IST)
+- **Email Notifications**: Optional success/failure notifications
+- **Formatting Preservation**: Your HO template formatting maintained in all files
 
-## 📈 Monitoring
+## 📊 File Naming Convention
 
-The system exposes Prometheus metrics on port 9090:
-- `tickets_processed_total` - Total tickets processed
-- `remediation_success_total` - Successful remediations
-- `remediation_failure_total` - Failed remediations
-- `remediation_duration_seconds` - Remediation duration
+**Monthly Folder**: `{MonthName}`
+- Example: `May`, `June`, `July`
 
-## 🧪 Testing
+**Daily Folder**: `{DD}_{MonthName}_{YYYY}`
+- Example: `01_May_2026`, `15_June_2026`
 
-```bash
-# Run unit tests
-pytest tests/unit/
+**Shift Files**: `{Month}_India_Shift_{Number}_{DD-MMM-YYYY}.xlsx`
+- Example: `May_India_Shift_1_01-May-2026.xlsx`
 
-# Run integration tests
-pytest tests/integration/
+## 🛠️ Technology Stack
 
-# Run with coverage
-pytest --cov=src tests/
-```
+- **Cloud Platform**: Microsoft 365
+- **Storage**: OneDrive for Business
+- **Automation**: Power Automate (Cloud Flows)
+- **File Format**: Microsoft Excel (.xlsx)
+- **Time Zone**: India Standard Time (UTC+5:30)
+- **Template**: Your existing HO template file
 
-## 📦 Deployment
+## 📈 Expected Results
 
-### Docker Deployment
-```bash
-docker-compose up -d
-```
+### Daily
+- 3 Excel files created automatically from your HO template
+- Files available at scheduled times
+- Proper folder organization maintained
 
-### Systemd Service (Linux)
-```bash
-sudo cp remediation-agent.service /etc/systemd/system/
-sudo systemctl enable remediation-agent
-sudo systemctl start remediation-agent
-```
+### Monthly
+- ~90 files created (30 days × 3 shifts)
+- New month folder created automatically
+- Consistent naming and structure
 
-## 💰 ROI
+### Yearly
+- ~1,095 files created (365 days × 3 shifts)
+- 12 month folders organized
+- Minimal manual intervention required
 
-- **Manual Intervention Time**: 15 min/ticket × 100 tickets/month = 25 hours
-- **Engineer Cost**: $50/hour × 25 hours = $1,250/month
-- **Automation Cost**: $500/month
-- **Monthly Savings**: $750
-- **Annual Savings**: $9,000
+## 🔍 Monitoring
+
+### Daily Checks
+- Review flow run history in Power Automate
+- Verify files created on time
+- Check for any failures
+
+### Weekly Checks
+- Audit all flow runs
+- Verify file consistency
+- Review storage usage
+
+### Monthly Checks
+- Audit folder structure
+- Update HO template if needed
+- Optimize flow performance
+
+## 🆘 Troubleshooting
+
+Common issues and solutions are documented in:
+- [`OneDrive_Shift_Files_Automation_Plan.md`](OneDrive_Shift_Files_Automation_Plan.md) - Detailed troubleshooting section
+- [`Quick_Reference_Guide.md`](Quick_Reference_Guide.md) - Quick fixes
+- [`Using_Existing_Template_Guide.md`](Using_Existing_Template_Guide.md) - Template-specific issues
+
+### Quick Fixes
+
+**Flow not running?**
+- Check if flow is enabled
+- Verify time zone setting
+- Review trigger configuration
+
+**Wrong date/time?**
+- Use `convertFromUtc()` function
+- Set time zone to 'India Standard Time'
+
+**File not created?**
+- Verify HO template file exists at `/Shift_Files/Templates/`
+- Check folder path
+- Review flow run history
+
+**Template formatting lost?**
+- See [`Using_Existing_Template_Guide.md`](Using_Existing_Template_Guide.md)
+- Test manual copy first
+- Check template compatibility
+
+## 📞 Support
+
+### Resources
+- [Power Automate Documentation](https://docs.microsoft.com/power-automate/)
+- [OneDrive Connector Reference](https://docs.microsoft.com/connectors/onedrive/)
+- [Power Automate Community](https://powerusers.microsoft.com/t5/Power-Automate-Community/ct-p/MPACommunity)
+
+### Getting Help
+1. Check the documentation files in this repository
+2. Review flow run history for error details
+3. Consult Power Automate community forums
+4. Contact Microsoft support if needed
+
+## 🎓 Learning Path
+
+### For Beginners
+1. Start with [`Quick_Reference_Guide.md`](Quick_Reference_Guide.md)
+2. Read [`Using_Existing_Template_Guide.md`](Using_Existing_Template_Guide.md)
+3. Understand the folder structure and naming conventions
+4. Learn basic Power Automate concepts
+5. Follow [`Power_Automate_Flow_Configurations.md`](Power_Automate_Flow_Configurations.md) step-by-step
+
+### For Experienced Users
+1. Review [`OneDrive_Shift_Files_Automation_Plan.md`](OneDrive_Shift_Files_Automation_Plan.md)
+2. Understand the architecture decisions
+3. Prepare your HO template using the guide
+4. Customize flows for your specific needs
+5. Implement advanced features
+
+## 🔐 Security Considerations
+
+- Use organizational account for automation
+- Enable MFA for automation account
+- Apply principle of least privilege
+- Regular permission audits
+- Enable audit logging
+- Backup HO template file regularly
+- Version control for template changes
+
+## 💰 Cost Considerations
+
+### Power Automate Licensing
+- Microsoft 365 license includes Power Automate (limited runs)
+- Power Automate Premium for unlimited runs
+- Estimated: ~1,472 runs per year
+
+### OneDrive Storage
+- Each file: ~50 KB (depends on your HO template size)
+- Daily files: 150 KB (3 shifts)
+- Monthly: ~4.5 MB (30 days)
+- Yearly: ~54 MB
+- Implement retention policy to manage storage
+
+## 🔄 Maintenance Schedule
+
+### Daily
+- Monitor flow run history
+- Check for failures
+
+### Weekly
+- Review all flow runs
+- Verify file consistency
+
+### Monthly
+- Audit folder structure
+- Update HO template if needed
+- Review performance
+
+### Quarterly
+- Comprehensive system review
+- Update documentation
+- Plan improvements
+
+## 📝 Version History
+
+| Version | Date | Description |
+|---------|------|-------------|
+| 1.0 | May 2026 | Initial documentation and implementation plan |
+| 1.1 | May 2026 | Added guide for using existing HO template |
 
 ## 🤝 Contributing
 
-1. Fork the repository
-2. Create a feature branch (`git checkout -b feature/amazing-feature`)
-3. Commit your changes (`git commit -m 'Add amazing feature'`)
-4. Push to the branch (`git push origin feature/amazing-feature`)
-5. Open a Pull Request
+This is an internal documentation project. For improvements or suggestions:
+1. Document the proposed change
+2. Test thoroughly in a development environment
+3. Update relevant documentation
+4. Submit for review
 
-## 📝 License
+## 📄 License
 
-This project is licensed under the MIT License - see the LICENSE file for details.
+Internal use only. All rights reserved.
 
-## 🆘 Support
+## ✅ Implementation Status
 
-For issues and questions:
-- Create an issue in the repository
-- Check the [troubleshooting guide](implementation-guide.md#troubleshooting)
-- Review the [documentation](windows-service-remediation-plan.md)
+Use [`Implementation_Checklist.md`](Implementation_Checklist.md) to track your implementation progress.
 
-## 🗺️ Roadmap
+## 🎯 Success Metrics
 
-### Phase 1: MVP (Weeks 1-2) ✅
-- Core functionality with ServiceNow API
-- AI ticket parsing
-- Basic service management
+- ✅ 100% automated file creation
+- ✅ Zero manual intervention required
+- ✅ Files available on time
+- ✅ Consistent naming and structure
+- ✅ HO template formatting preserved
+- ✅ No duplicate files
+- ✅ Reliable 24/7 operation
 
-### Phase 2: Enhanced Features (Weeks 3-4)
-- Email monitoring
-- Configuration management
-- Database logging
+## 📧 Contact
 
-### Phase 3: Production Ready (Weeks 5-6)
-- Webhook support
-- Monitoring dashboard
-- Advanced security features
-
-## 📞 Contact
-
-Project Maintainer: [Your Name]
-Email: [your.email@company.com]
+For questions or support regarding this automation system, contact your IT team or Power Automate administrator.
 
 ---
 
-**Note**: This is an AI-powered automation system. Always test thoroughly in a non-production environment before deploying to production servers.
+**Last Updated**: May 2, 2026  
+**Maintained By**: IT Team  
+**Review Frequency**: Quarterly
+
+---
+
+## 🚦 Getting Started Now
+
+Ready to implement? Follow these steps:
+
+1. ✅ Read [`OneDrive_Shift_Files_Automation_Plan.md`](OneDrive_Shift_Files_Automation_Plan.md)
+2. ✅ Prepare your HO template using [`Using_Existing_Template_Guide.md`](Using_Existing_Template_Guide.md)
+3. ✅ Open [`Implementation_Checklist.md`](Implementation_Checklist.md)
+4. ✅ Start with Phase 1: Prerequisites and Setup
+5. ✅ Follow [`Power_Automate_Flow_Configurations.md`](Power_Automate_Flow_Configurations.md) for each flow
+6. ✅ Use [`Quick_Reference_Guide.md`](Quick_Reference_Guide.md) as your daily reference
+
+**Good luck with your implementation!** 🎉
+
+---
+
+## 💡 Important Note About Your HO Template
+
+Since you already have an existing HO template file, make sure to:
+- Read [`Using_Existing_Template_Guide.md`](Using_Existing_Template_Guide.md) first
+- Upload your template to `/Shift_Files/Templates/` in OneDrive
+- Test that the template works correctly when copied
+- Keep a backup of your original template file
+
+The automation will use your HO template to create all shift files, preserving all your formatting, formulas, and data structures.
