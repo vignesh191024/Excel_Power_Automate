@@ -10,9 +10,9 @@ This project provides a complete solution for automating the creation of shift-b
 - Creates monthly folders (e.g., "May", "June")
 - Creates daily folders with format `DD_Month_YYYY` (e.g., "01_May_2026")
 - Generates 3 shift files per day at scheduled times:
-  - **Shift 1**: 6:00 AM IST
-  - **Shift 2**: 2:00 PM IST
-  - **Shift 3**: 10:00 PM IST
+  - **Shift 1 (India)**: 6:30 AM IST
+  - **Shift 2 (India)**: 2:30 PM IST
+  - **Shift 3 (US-Canada)**: 10:30 PM IST
 
 **Example Output Structure**:
 ```
@@ -21,7 +21,7 @@ OneDrive/Shift_Files/
     └── 01_May_2026/
         ├── May_India_Shift_1_01-May-2026.xlsx
         ├── May_India_Shift_2_01-May-2026.xlsx
-        └── May_India_Shift_3_01-May-2026.xlsx
+        └── US-CAN-SHIFT_01-May-2026.xlsx
 ```
 
 ## 📚 Documentation Files
@@ -120,17 +120,17 @@ This repository contains comprehensive documentation for implementing and mainta
    - Runs: Every day at 12:05 AM IST
    - Creates: Daily folder (e.g., "01_May_2026")
 
-3. **Shift 1 File Generator**
-   - Runs: Every day at 6:00 AM IST
-   - Creates: Shift 1 Excel file from your HO template
+3. **Shift 1 File Generator (India)**
+   - Runs: Every day at 6:30 AM IST
+   - Creates: India Shift 1 Excel file from your HO template
 
-4. **Shift 2 File Generator**
-   - Runs: Every day at 2:00 PM IST
-   - Creates: Shift 2 Excel file from your HO template
+4. **Shift 2 File Generator (India)**
+   - Runs: Every day at 2:30 PM IST
+   - Creates: India Shift 2 Excel file from your HO template
 
-5. **Shift 3 File Generator**
-   - Runs: Every day at 10:00 PM IST
-   - Creates: Shift 3 Excel file from your HO template
+5. **Shift 3 File Generator (US-Canada)**
+   - Runs: Every day at 10:30 PM IST
+   - Creates: US-Canada Shift Excel file from your HO template
 
 ### Why This Approach?
 
