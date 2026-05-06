@@ -8,9 +8,9 @@ Automated system to generate shift-based Excel files in OneDrive with a hierarch
 OneDrive Root
 └── May/
     └── 01_May_2026/
-        ├── May_India_Shift_1_01-May-2026.xlsx (Created at 6:00 AM IST)
-        ├── May_India_Shift_2_01-May-2026.xlsx (Created at 2:00 PM IST)
-        └── May_India_Shift_3_01-May-2026.xlsx (Created at 10:00 PM IST)
+        ├── India_Shift_1_01-May-2026.xlsx (Created at 6:30 AM IST)
+        ├── India_Shift_2_01-May-2026.xlsx (Created at 2:30 PM IST)
+        └── US_CAN-Shift-01-May-2026.xlsx (Created at 10:30 PM IST)
 ```
 
 ## System Architecture
@@ -188,8 +188,8 @@ The automation will create month and daily folders automatically.
 3. **Initialize Variable - File Name**
    - Name: `varFileName`
    - Type: String
-   - Value: `@{variables('varMonthName')}_India_Shift_1_@{variables('varDateString')}.xlsx`
-   - Example: `May_India_Shift_1_01-May-2026.xlsx`
+   - Value: `India_Shift_1_@{variables('varDateString')}.xlsx`
+   - Example: `India_Shift_1_01-May-2026.xlsx`
 
 4. **Initialize Variable - Destination Path**
    - Name: `varDestPath`
@@ -231,7 +231,7 @@ The automation will create month and daily folders automatically.
 - Run at: 2:30 PM IST (14:30 IST)
 
 **File Name Variable**:
-- Value: `@{variables('varMonthName')}_India_Shift_2_@{variables('varDateString')}.xlsx`
+- Value: `India_Shift_2_@{variables('varDateString')}.xlsx`
 
 All other logic remains identical to Shift 1 flow.
 
@@ -245,7 +245,7 @@ All other logic remains identical to Shift 1 flow.
 - Run at: 10:30 PM IST (22:30 IST)
 
 **File Name Variable**:
-- Value: `@{variables('varMonthName')}_India_Shift_3_@{variables('varDateString')}.xlsx`
+- Value: `US_CAN-Shift-@{variables('varDateString')}.xlsx`
 
 All other logic remains identical to Shift 1 flow.
 
@@ -258,13 +258,13 @@ graph TD
     C[Daily Folder Flow<br/>Every day, 6:15 AM] --> D[Create Daily Folder<br/>e.g., 01_May_2026]
     
     E[Shift 1 Flow<br/>Every day, 6:30 AM] --> F[Copy Template]
-    F --> G[Create Shift 1 File<br/>May_India_Shift_1_01-May-2026.xlsx]
+    F --> G[Create Shift 1 File<br/>India_Shift_1_01-May-2026.xlsx]
     
     H[Shift 2 Flow<br/>Every day, 2:30 PM] --> I[Copy Template]
-    I --> J[Create Shift 2 File<br/>May_India_Shift_2_01-May-2026.xlsx]
+    I --> J[Create Shift 2 File<br/>India_Shift_2_01-May-2026.xlsx]
     
     K[Shift 3 Flow<br/>Every day, 10:30 PM] --> L[Copy Template]
-    L --> M[Create Shift 3 File<br/>May_India_Shift_3_01-May-2026.xlsx]
+    L --> M[Create Shift 3 File<br/>US_CAN-Shift-01-May-2026.xlsx]
     
     B --> D
     D --> G
@@ -322,7 +322,17 @@ formatDateTime(convertFromUtc(utcNow(), 'India Standard Time'), 'dd-MMM-yyyy')
 
 **Shift 1 File Name**:
 ```
-@{formatDateTime(convertFromUtc(utcNow(), 'India Standard Time'), 'MMMM')}_India_Shift_1_@{formatDateTime(convertFromUtc(utcNow(), 'India Standard Time'), 'dd-MMM-yyyy')}.xlsx
+India_Shift_1_@{formatDateTime(convertFromUtc(utcNow(), 'India Standard Time'), 'dd-MMM-yyyy')}.xlsx
+```
+
+**Shift 2 File Name**:
+```
+India_Shift_2_@{formatDateTime(convertFromUtc(utcNow(), 'India Standard Time'), 'dd-MMM-yyyy')}.xlsx
+```
+
+**Shift 3 File Name**:
+```
+US_CAN-Shift-@{formatDateTime(convertFromUtc(utcNow(), 'India Standard Time'), 'dd-MMM-yyyy')}.xlsx
 ```
 
 ## Testing Strategy

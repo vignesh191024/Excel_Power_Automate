@@ -14,14 +14,14 @@ OneDrive Root
     │
     ├── May/                    (Created monthly at 6:00 AM)
     │   ├── 01_May_2026/        (Created daily at 6:15 AM)
-    │   │   ├── May_India_Shift_1_01-May-2026.xlsx (6:30 AM)
-    │   │   ├── May_India_Shift_2_01-May-2026.xlsx (2:30 PM)
-    │   │   └── May_India_Shift_3_01-May-2026.xlsx (10:30 PM)
+    │   │   ├── India_Shift_1_01-May-2026.xlsx (6:30 AM)
+    │   │   ├── India_Shift_2_01-May-2026.xlsx (2:30 PM)
+    │   │   └── US_CAN-Shift-01-May-2026.xlsx (10:30 PM)
     │   │
     │   ├── 02_May_2026/
-    │   │   ├── May_India_Shift_1_02-May-2026.xlsx
-    │   │   ├── May_India_Shift_2_02-May-2026.xlsx
-    │   │   └── May_India_Shift_3_02-May-2026.xlsx
+    │   │   ├── India_Shift_1_02-May-2026.xlsx
+    │   │   ├── India_Shift_2_02-May-2026.xlsx
+    │   │   └── US_CAN-Shift-02-May-2026.xlsx
     │   │
     │   └── 03_May_2026/
     │       └── ... (continues daily)
@@ -108,27 +108,28 @@ graph TB
 ### Flow 3: Shift 1 File Generator
 - **Trigger**: Every day at 6:30 AM IST
 - **Purpose**: Creates Shift 1 Excel file
-- **Output**: `May_India_Shift_1_01-May-2026.xlsx`
+- **Output**: `India_Shift_1_01-May-2026.xlsx`
 
 ### Flow 4: Shift 2 File Generator
 - **Trigger**: Every day at 2:30 PM IST
 - **Purpose**: Creates Shift 2 Excel file
-- **Output**: `May_India_Shift_2_01-May-2026.xlsx`
+- **Output**: `India_Shift_2_01-May-2026.xlsx`
 
 ### Flow 5: Shift 3 File Generator
 - **Trigger**: Every day at 10:30 PM IST
-- **Purpose**: Creates Shift 3 Excel file
-- **Output**: `May_India_Shift_3_01-May-2026.xlsx`
+- **Purpose**: Creates Shift 3 Excel file (US-Canada)
+- **Output**: `US_CAN-Shift-01-May-2026.xlsx`
 
 ## File Naming Convention
 
 ```
-Format: {Month}_India_Shift_{ShiftNumber}_{Date}.xlsx
+India Shifts Format: India_Shift_{ShiftNumber}_{Date}.xlsx
+US-Canada Shift Format: US_CAN-Shift-{Date}.xlsx
 
 Examples:
-- May_India_Shift_1_01-May-2026.xlsx
-- May_India_Shift_2_15-May-2026.xlsx
-- June_India_Shift_3_30-June-2026.xlsx
+- India_Shift_1_01-May-2026.xlsx
+- India_Shift_2_15-May-2026.xlsx
+- US_CAN-Shift-30-June-2026.xlsx
 ```
 
 ## Folder Naming Convention
@@ -178,11 +179,17 @@ Output: `01-May-2026`
 ```
 Output: `01_May_2026`
 
-### Build File Name
+### Build File Name (Shift 1 & 2)
 ```
-@{variables('varMonthName')}_India_Shift_1_@{variables('varDateString')}.xlsx
+India_Shift_1_@{variables('varDateString')}.xlsx
 ```
-Output: `May_India_Shift_1_01-May-2026.xlsx`
+Output: `India_Shift_1_01-May-2026.xlsx`
+
+### Build File Name (Shift 3 - US-Canada)
+```
+US_CAN-Shift-@{variables('varDateString')}.xlsx
+```
+Output: `US_CAN-Shift-01-May-2026.xlsx`
 
 ## Common Tasks
 

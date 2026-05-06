@@ -94,7 +94,7 @@ Use this checklist to track your progress while implementing the automated shift
 - [ ] Add variable: `varYear`
 - [ ] Add variable: `varDateString`
 - [ ] Add variable: `varDailyFolderName`
-- [ ] Add variable: `varFileName` (Shift 1)
+- [ ] Add variable: `varFileName` (India Shift 1)
 - [ ] Add variable: `varDestPath`
 - [ ] Add variable: `varFullFilePath`
 - [ ] Add action: Get template file content
@@ -112,13 +112,13 @@ Use this checklist to track your progress while implementing the automated shift
 
 ### Flow 4: Shift 2 File Generator
 - [ ] Create new scheduled cloud flow
-- [ ] Name: `Generate Shift 2 File`
+- [ ] Name: `Generate Shift 2 File` (India)
 - [ ] Configure recurrence trigger:
   - [ ] Frequency: Day
   - [ ] Time: 2:00 PM (14:00)
   - [ ] Time zone: India Standard Time
 - [ ] Copy all variables from Shift 1 flow
-- [ ] Update `varFileName` for Shift 2
+- [ ] Update `varFileName` for India Shift 2
 - [ ] Copy all actions from Shift 1 flow
 - [ ] Update email subject for Shift 2
 - [ ] Save flow
@@ -128,13 +128,13 @@ Use this checklist to track your progress while implementing the automated shift
 
 ### Flow 5: Shift 3 File Generator
 - [ ] Create new scheduled cloud flow
-- [ ] Name: `Generate Shift 3 File`
+- [ ] Name: `Generate Shift 3 File` (US-Canada)
 - [ ] Configure recurrence trigger:
   - [ ] Frequency: Day
   - [ ] Time: 10:00 PM (22:00)
   - [ ] Time zone: India Standard Time
 - [ ] Copy all variables from Shift 1 flow
-- [ ] Update `varFileName` for Shift 3
+- [ ] Update `varFileName` for US-Canada Shift (US_CAN-Shift-{date}.xlsx)
 - [ ] Copy all actions from Shift 1 flow
 - [ ] Update email subject for Shift 3
 - [ ] Save flow
@@ -165,11 +165,11 @@ Use this checklist to track your progress while implementing the automated shift
   - [ ] Email notification received
 - [ ] Test Shift 2 File Generator
   - [ ] Manual trigger successful
-  - [ ] File name correct (Shift 2)
+  - [ ] File name correct (India_Shift_2_DD-MMM-YYYY.xlsx)
   - [ ] All features working
 - [ ] Test Shift 3 File Generator
   - [ ] Manual trigger successful
-  - [ ] File name correct (Shift 3)
+  - [ ] File name correct (US_CAN-Shift-DD-MMM-YYYY.xlsx)
   - [ ] All features working
 
 ### Integration Testing

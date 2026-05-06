@@ -19,9 +19,9 @@ This project provides a complete solution for automating the creation of shift-b
 OneDrive/Shift_Files/
 └── May/
     └── 01_May_2026/
-        ├── May_India_Shift_1_01-May-2026.xlsx
-        ├── May_India_Shift_2_01-May-2026.xlsx
-        └── US-CAN-SHIFT_01-May-2026.xlsx
+        ├── India_Shift_1_01-May-2026.xlsx
+        ├── India_Shift_2_01-May-2026.xlsx
+        └── US_CAN-Shift-01-May-2026.xlsx
 ```
 
 ## 📚 Documentation Files
@@ -159,8 +159,11 @@ This repository contains comprehensive documentation for implementing and mainta
 **Daily Folder**: `{DD}_{MonthName}_{YYYY}`
 - Example: `01_May_2026`, `15_June_2026`
 
-**Shift Files**: `{Month}_India_Shift_{Number}_{DD-MMM-YYYY}.xlsx`
-- Example: `May_India_Shift_1_01-May-2026.xlsx`
+**India Shift Files**: `India_Shift_{Number}_{DD-MMM-YYYY}.xlsx`
+- Example: `India_Shift_1_01-May-2026.xlsx`
+
+**US-Canada Shift File**: `US_CAN-Shift-{DD-MMM-YYYY}.xlsx`
+- Example: `US_CAN-Shift-01-May-2026.xlsx`
 
 ## 🛠️ Technology Stack
 

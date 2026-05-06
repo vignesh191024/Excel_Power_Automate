@@ -342,9 +342,9 @@ Action: Initialize variable
 Action: Initialize variable
 ├── Name: varFileName
 ├── Type: String
-└── Value: @{variables('varMonthName')}_India_Shift_1_@{variables('varDateString')}.xlsx
+└── Value: India_Shift_1_@{variables('varDateString')}.xlsx
 ```
-Example output: `May_India_Shift_1_01-May-2026.xlsx`
+Example output: `India_Shift_1_01-May-2026.xlsx`
 
 #### 10. Add Action: Initialize Variable - Destination Path
 ```
@@ -455,9 +455,9 @@ Creates Shift 2 Excel file at 2:00 PM IST daily
 
 3. **File Name Variable** (Step 9):
    ```
-   Value: @{variables('varMonthName')}_India_Shift_2_@{variables('varDateString')}.xlsx
+   Value: India_Shift_2_@{variables('varDateString')}.xlsx
    ```
-   Example output: `May_India_Shift_2_01-May-2026.xlsx`
+   Example output: `India_Shift_2_01-May-2026.xlsx`
 
 4. **Email Subject** (Step 15):
    ```
@@ -489,9 +489,9 @@ Creates Shift 3 Excel file at 10:00 PM IST daily
 
 3. **File Name Variable** (Step 9):
    ```
-   Value: @{variables('varMonthName')}_India_Shift_3_@{variables('varDateString')}.xlsx
+   Value: US_CAN-Shift-@{variables('varDateString')}.xlsx
    ```
-   Example output: `May_India_Shift_3_01-May-2026.xlsx`
+   Example output: `US_CAN-Shift-01-May-2026.xlsx`
 
 4. **Email Subject** (Step 15):
    ```
@@ -556,9 +556,9 @@ All other steps remain identical to Shift 1 flow.
 2. Verify complete folder structure:
    ```
    /Shift_Files/May/01_May_2026/
-   ├── May_India_Shift_1_01-May-2026.xlsx
-   ├── May_India_Shift_2_01-May-2026.xlsx
-   └── May_India_Shift_3_01-May-2026.xlsx
+   ├── India_Shift_1_01-May-2026.xlsx
+   ├── India_Shift_2_01-May-2026.xlsx
+   └── US_CAN-Shift-01-May-2026.xlsx
    ```
 
 #### Test 7: Duplicate Prevention
