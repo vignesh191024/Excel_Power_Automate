@@ -88,7 +88,7 @@ The automation will create month and daily folders automatically.
 **Trigger**: Recurrence
 - Frequency: Month
 - Run on: 1st day of each month
-- Time: 12:01 AM IST (UTC+5:30)
+- Time: 6:00 AM IST (UTC+5:30)
 
 **Actions**:
 
@@ -123,7 +123,7 @@ The automation will create month and daily folders automatically.
 
 **Trigger**: Recurrence
 - Frequency: Day
-- Run at: 12:05 AM IST (UTC+5:30)
+- Run at: 6:15 AM IST (UTC+5:30)
 - Time zone: India Standard Time
 
 **Actions**:
@@ -168,7 +168,7 @@ The automation will create month and daily folders automatically.
 
 **Trigger**: Recurrence
 - Frequency: Day
-- Run at: 6:00 AM IST (UTC+5:30)
+- Run at: 6:30 AM IST (UTC+5:30)
 - Time zone: India Standard Time
 
 **Actions**:
@@ -227,8 +227,8 @@ The automation will create month and daily folders automatically.
 
 **Configuration**: Same as Shift 1 flow with these changes:
 
-**Trigger**: 
-- Run at: 2:00 PM IST (14:00 IST)
+**Trigger**:
+- Run at: 2:30 PM IST (14:30 IST)
 
 **File Name Variable**:
 - Value: `@{variables('varMonthName')}_India_Shift_2_@{variables('varDateString')}.xlsx`
@@ -241,8 +241,8 @@ All other logic remains identical to Shift 1 flow.
 
 **Configuration**: Same as Shift 1 flow with these changes:
 
-**Trigger**: 
-- Run at: 10:00 PM IST (22:00 IST)
+**Trigger**:
+- Run at: 10:30 PM IST (22:30 IST)
 
 **File Name Variable**:
 - Value: `@{variables('varMonthName')}_India_Shift_3_@{variables('varDateString')}.xlsx`
@@ -253,17 +253,17 @@ All other logic remains identical to Shift 1 flow.
 
 ```mermaid
 graph TD
-    A[Monthly Folder Flow<br/>1st of month, 12:01 AM] --> B[Create Month Folder<br/>e.g., May]
+    A[Monthly Folder Flow<br/>1st of month, 6:00 AM] --> B[Create Month Folder<br/>e.g., May]
     
-    C[Daily Folder Flow<br/>Every day, 12:05 AM] --> D[Create Daily Folder<br/>e.g., 01_May_2026]
+    C[Daily Folder Flow<br/>Every day, 6:15 AM] --> D[Create Daily Folder<br/>e.g., 01_May_2026]
     
-    E[Shift 1 Flow<br/>Every day, 6:00 AM] --> F[Copy Template]
+    E[Shift 1 Flow<br/>Every day, 6:30 AM] --> F[Copy Template]
     F --> G[Create Shift 1 File<br/>May_India_Shift_1_01-May-2026.xlsx]
     
-    H[Shift 2 Flow<br/>Every day, 2:00 PM] --> I[Copy Template]
+    H[Shift 2 Flow<br/>Every day, 2:30 PM] --> I[Copy Template]
     I --> J[Create Shift 2 File<br/>May_India_Shift_2_01-May-2026.xlsx]
     
-    K[Shift 3 Flow<br/>Every day, 10:00 PM] --> L[Copy Template]
+    K[Shift 3 Flow<br/>Every day, 10:30 PM] --> L[Copy Template]
     L --> M[Create Shift 3 File<br/>May_India_Shift_3_01-May-2026.xlsx]
     
     B --> D

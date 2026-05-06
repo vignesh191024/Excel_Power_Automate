@@ -113,11 +113,11 @@ This repository contains comprehensive documentation for implementing and mainta
 ### Five Power Automate Flows
 
 1. **Monthly Folder Creator**
-   - Runs: 1st of each month at 12:01 AM IST
+   - Runs: 1st of each month at 6:00 AM IST
    - Creates: Month folder (e.g., "May")
 
 2. **Daily Folder Creator**
-   - Runs: Every day at 12:05 AM IST
+   - Runs: Every day at 6:15 AM IST
    - Creates: Daily folder (e.g., "01_May_2026")
 
 3. **Shift 1 File Generator (India)**

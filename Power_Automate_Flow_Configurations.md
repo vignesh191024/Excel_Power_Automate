@@ -57,8 +57,8 @@ Trigger: Recurrence
 ├── Interval: 1
 ├── Frequency: Month
 ├── Time zone: (UTC+05:30) Chennai, Kolkata, Mumbai, New Delhi
-├── At these hours: 0 (12 AM)
-├── At these minutes: 1
+├── At these hours: 6 (6 AM)
+├── At these minutes: 0
 └── On these days: 1
 ```
 
@@ -149,8 +149,8 @@ Trigger: Recurrence
 ├── Interval: 1
 ├── Frequency: Day
 ├── Time zone: (UTC+05:30) Chennai, Kolkata, Mumbai, New Delhi
-├── At these hours: 0 (12 AM)
-└── At these minutes: 5
+├── At these hours: 6 (6 AM)
+└── At these minutes: 15
 ```
 
 #### 3. Add Action: Initialize Variable - Current Date IST
@@ -285,7 +285,7 @@ Trigger: Recurrence
 ├── Frequency: Day
 ├── Time zone: (UTC+05:30) Chennai, Kolkata, Mumbai, New Delhi
 ├── At these hours: 6 (6 AM)
-└── At these minutes: 0
+└── At these minutes: 30
 ```
 
 #### 3. Add Action: Initialize Variable - Current Date IST
@@ -450,7 +450,7 @@ Creates Shift 2 Excel file at 2:00 PM IST daily
 2. **Recurrence Trigger**:
    ```
    At these hours: 14 (2 PM)
-   At these minutes: 0
+   At these minutes: 30
    ```
 
 3. **File Name Variable** (Step 9):
@@ -484,7 +484,7 @@ Creates Shift 3 Excel file at 10:00 PM IST daily
 2. **Recurrence Trigger**:
    ```
    At these hours: 22 (10 PM)
-   At these minutes: 0
+   At these minutes: 30
    ```
 
 3. **File Name Variable** (Step 9):

@@ -12,11 +12,11 @@ OneDrive Root
     ├── Templates/
     │   └── Shift_Template.xlsx (Master template)
     │
-    ├── May/                    (Created monthly at 12:01 AM)
-    │   ├── 01_May_2026/        (Created daily at 12:05 AM)
-    │   │   ├── May_India_Shift_1_01-May-2026.xlsx (6:00 AM)
-    │   │   ├── May_India_Shift_2_01-May-2026.xlsx (2:00 PM)
-    │   │   └── May_India_Shift_3_01-May-2026.xlsx (10:00 PM)
+    ├── May/                    (Created monthly at 6:00 AM)
+    │   ├── 01_May_2026/        (Created daily at 6:15 AM)
+    │   │   ├── May_India_Shift_1_01-May-2026.xlsx (6:30 AM)
+    │   │   ├── May_India_Shift_2_01-May-2026.xlsx (2:30 PM)
+    │   │   └── May_India_Shift_3_01-May-2026.xlsx (10:30 PM)
     │   │
     │   ├── 02_May_2026/
     │   │   ├── May_India_Shift_1_02-May-2026.xlsx
@@ -40,16 +40,16 @@ gantt
     axisFormat %H:%M
     
     section Folder Setup
-    Create Daily Folder    :milestone, m1, 00:05, 0m
+    Create Daily Folder    :milestone, m1, 06:15, 0m
     
     section Shift 1
-    Create Shift 1 File    :milestone, m2, 06:00, 0m
+    Create Shift 1 File    :milestone, m2, 06:30, 0m
     
     section Shift 2
-    Create Shift 2 File    :milestone, m3, 14:00, 0m
+    Create Shift 2 File    :milestone, m3, 14:30, 0m
     
     section Shift 3
-    Create Shift 3 File    :milestone, m4, 22:00, 0m
+    Create Shift 3 File    :milestone, m4, 22:30, 0m
 ```
 
 ## Flow Architecture
@@ -57,14 +57,14 @@ gantt
 ```mermaid
 graph TB
     subgraph "Monthly Schedule"
-        A[Monthly Folder Flow<br/>1st of month, 12:01 AM]
+        A[Monthly Folder Flow<br/>1st of month, 6:00 AM]
     end
     
     subgraph "Daily Schedule"
-        B[Daily Folder Flow<br/>Every day, 12:05 AM]
-        C[Shift 1 Flow<br/>Every day, 6:00 AM]
-        D[Shift 2 Flow<br/>Every day, 2:00 PM]
-        E[Shift 3 Flow<br/>Every day, 10:00 PM]
+        B[Daily Folder Flow<br/>Every day, 6:15 AM]
+        C[Shift 1 Flow<br/>Every day, 6:30 AM]
+        D[Shift 2 Flow<br/>Every day, 2:30 PM]
+        E[Shift 3 Flow<br/>Every day, 10:30 PM]
     end
     
     subgraph "OneDrive Structure"
@@ -96,27 +96,27 @@ graph TB
 ## Flow Details
 
 ### Flow 1: Monthly Folder Creator
-- **Trigger**: 1st of each month at 12:01 AM IST
+- **Trigger**: 1st of each month at 6:00 AM IST
 - **Purpose**: Creates month folder (e.g., "May")
 - **Output**: `/Shift_Files/May/`
 
 ### Flow 2: Daily Folder Creator
-- **Trigger**: Every day at 12:05 AM IST
+- **Trigger**: Every day at 6:15 AM IST
 - **Purpose**: Creates daily folder with format `DD_Month_YYYY`
 - **Output**: `/Shift_Files/May/01_May_2026/`
 
 ### Flow 3: Shift 1 File Generator
-- **Trigger**: Every day at 6:00 AM IST
+- **Trigger**: Every day at 6:30 AM IST
 - **Purpose**: Creates Shift 1 Excel file
 - **Output**: `May_India_Shift_1_01-May-2026.xlsx`
 
 ### Flow 4: Shift 2 File Generator
-- **Trigger**: Every day at 2:00 PM IST
+- **Trigger**: Every day at 2:30 PM IST
 - **Purpose**: Creates Shift 2 Excel file
 - **Output**: `May_India_Shift_2_01-May-2026.xlsx`
 
 ### Flow 5: Shift 3 File Generator
-- **Trigger**: Every day at 10:00 PM IST
+- **Trigger**: Every day at 10:30 PM IST
 - **Purpose**: Creates Shift 3 Excel file
 - **Output**: `May_India_Shift_3_01-May-2026.xlsx`
 
@@ -266,7 +266,7 @@ sequenceDiagram
     participant OD as OneDrive
     participant U as User
     
-    Note over T,U: Daily at 6:00 AM IST
+    Note over T,U: Daily at 6:30 AM IST
     
     T->>F: Trigger Shift 1 Flow
     F->>F: Calculate date variables
