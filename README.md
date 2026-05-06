@@ -7,8 +7,9 @@ This project provides a complete solution for automating the creation of shift-b
 ## 🎯 What This System Does
 
 **Automated File Generation using Chain-Copy Workflow**:
-- Creates monthly folders (e.g., "May", "June") at 6:00 AM on 1st of month
-- Creates daily folders with format `DD_Month_YYYY` (e.g., "01_May_2026") at 6:15 AM daily
+- Creates yearly folders (e.g., "2026", "2027") at 5:30 AM on January 1st
+- Creates monthly folders (e.g., "May", "June") at 6:00 AM on 1st of month inside year folder
+- Creates daily folders with format `DD_Month_YYYY` (e.g., "06_May_2026") at 6:15 AM daily inside year/month
 - Generates 3 shift files per day by **copying and renaming** the previous shift's file:
   - **6:30 AM**: India Shift 1 (copies yesterday's US-CAN file)
   - **2:30 PM**: India Shift 2 (copies today's Shift 1 file)
@@ -17,11 +18,12 @@ This project provides a complete solution for automating the creation of shift-b
 **Example Output Structure**:
 ```
 SharePoint/Daily Handover/
-└── May/
-    └── 02_May_2026/
-        ├── India_Shift_1_02-May-2026.xlsx (copied from US_CAN-Shift-01-May-2026.xlsx)
-        ├── India_Shift_2_02-May-2026.xlsx (copied from India_Shift_1_02-May-2026.xlsx)
-        └── US_CAN-Shift-02-May-2026.xlsx (copied from India_Shift_2_02-May-2026.xlsx)
+└── 2026/                           (Year folder - created Jan 1 at 5:30 AM)
+    └── May/                        (Month folder - created May 1 at 6:00 AM)
+        └── 02_May_2026/            (Daily folder - created daily at 6:15 AM)
+            ├── India_Shift_1_02-May-2026.xlsx (6:30 AM - copied from US_CAN-Shift-01-May-2026.xlsx)
+            ├── India_Shift_2_02-May-2026.xlsx (2:30 PM - copied from India_Shift_1_02-May-2026.xlsx)
+            └── US_CAN-Shift-02-May-2026.xlsx (10:30 PM - copied from India_Shift_2_02-May-2026.xlsx)
 ```
 
 **Key Feature**: Each file is created by copying the previous shift's file, maintaining data continuity across shifts.
@@ -184,12 +186,13 @@ This repository contains comprehensive documentation for implementing and mainta
 
 ### Monthly
 - ~90 files created (30 days × 3 shifts)
-- New month folder created automatically
+- New month folder created automatically inside year folder
 - Consistent naming and structure
 
 ### Yearly
 - ~1,095 files created (365 days × 3 shifts)
-- 12 month folders organized
+- 12 month folders organized inside year folder
+- New year folder created automatically on January 1st
 - Minimal manual intervention required
 
 ## 🔍 Monitoring
@@ -317,6 +320,7 @@ Common issues and solutions are documented in:
 | 1.0 | May 2026 | Initial documentation - template-based approach |
 | 1.1 | May 2026 | Added guide for using existing HO template |
 | 2.0 | May 6, 2026 | Major update - SharePoint chain-copy workflow |
+| 2.1 | May 6, 2026 | Added Year Folder Creator (Flow 0) at 5:30 AM |
 
 ## 🤝 Contributing
 

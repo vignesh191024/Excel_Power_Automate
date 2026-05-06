@@ -24,8 +24,9 @@ Day 3 (May 3rd):
 
 ## 🏗️ System Architecture
 
-### Five Power Automate Flows
+### Six Power Automate Flows
 
+0. **Year Folder Creator** - Runs January 1st at 5:30 AM IST
 1. **Monthly Folder Creator** - Runs 1st of month at 6:00 AM IST
 2. **Daily Folder Creator** - Runs daily at 6:15 AM IST
 3. **India Shift 1 Generator** - Runs daily at 6:30 AM IST (copies yesterday's US-CAN file)
@@ -45,15 +46,77 @@ Day 3 (May 3rd):
 ```
 /OC HANDOVER CIBC INTRIA/
   └── Daily Handover/
-      └── May/
-          └── 01_May_2026/
-              └── US_CAN-Shift-01-May-2026.xlsx (your existing file)
+      └── 2026/                    (Year folder - created by Flow 0)
+          └── May/                 (Month folder - created by Flow 1)
+              └── 01_May_2026/     (Daily folder - created by Flow 2)
+                  └── US_CAN-Shift-01-May-2026.xlsx (your existing file)
 ```
 
 ### Required Permissions
 
 - Edit access to SharePoint site
 - Power Automate Premium license (or included in M365)
+
+---
+
+## 🔧 Flow 0: Year Folder Creator
+
+**Purpose**: Creates year folder (e.g., "2026", "2027")
+**Schedule**: January 1st at 5:30 AM IST
+
+### Configuration Steps
+
+#### 1. Create Flow
+- Go to https://make.powerautomate.com
+- Click **+ Create** → **Scheduled cloud flow**
+- Name: `Create Yearly Shift Folder`
+- Starting: January 1st of current year
+- Repeat every: 1 Year
+- Click **Create**
+
+#### 2. Configure Recurrence Trigger
+```
+Trigger: Recurrence
+├── Interval: 1
+├── Frequency: Year
+├── Time zone: (UTC+05:30) Chennai, Kolkata, Mumbai, New Delhi
+├── At these hours: 5
+├── At these minutes: 30
+├── On these months: January
+└── On these days: 1
+```
+
+#### 3. Initialize Variable - Year
+```
+Action: Initialize variable
+├── Name: varYear
+├── Type: String
+└── Value: formatDateTime(convertFromUtc(utcNow(), 'India Standard Time'), 'yyyy')
+```
+
+#### 4. Initialize Variable - Year Folder Path
+```
+Action: Initialize variable
+├── Name: varYearFolderPath
+├── Type: String
+└── Value: /OC HANDOVER CIBC INTRIA/Daily Handover/@{variables('varYear')}
+```
+
+#### 5. Create Folder (SharePoint)
+```
+Action: Create new folder
+├── Connector: SharePoint
+├── Site Address: https://ibm-my.sharepoint.com/personal/b_vignesh19_ibm_com
+├── Folder Path: /OC HANDOVER CIBC INTRIA/Daily Handover
+└── Name: @{variables('varYear')}
+```
+
+**Configure run after**: Click 3 dots → Configure run after → Check all boxes (handles "already exists" error)
+
+#### 6. Save and Test
+- Click **Save**
+- Click **Test** → **Manually** → **Run flow**
+- Verify folder created in SharePoint
 
 ---
 
@@ -83,7 +146,15 @@ Trigger: Recurrence
 └── On these days: 1
 ```
 
-#### 3. Initialize Variable - Month Name
+#### 3. Initialize Variable - Year
+```
+Action: Initialize variable
+├── Name: varYear
+├── Type: String
+└── Value: formatDateTime(convertFromUtc(utcNow(), 'India Standard Time'), 'yyyy')
+```
+
+#### 4. Initialize Variable - Month Name
 ```
 Action: Initialize variable
 ├── Name: varMonthName
@@ -91,26 +162,26 @@ Action: Initialize variable
 └── Value: formatDateTime(convertFromUtc(utcNow(), 'India Standard Time'), 'MMMM')
 ```
 
-#### 4. Initialize Variable - Folder Path
+#### 5. Initialize Variable - Folder Path
 ```
 Action: Initialize variable
 ├── Name: varMonthFolderPath
 ├── Type: String
-└── Value: /OC HANDOVER CIBC INTRIA/Daily Handover/@{variables('varMonthName')}
+└── Value: /OC HANDOVER CIBC INTRIA/Daily Handover/@{variables('varYear')}/@{variables('varMonthName')}
 ```
 
-#### 5. Create Folder (SharePoint)
+#### 6. Create Folder (SharePoint)
 ```
 Action: Create new folder
 ├── Connector: SharePoint
 ├── Site Address: https://ibm-my.sharepoint.com/personal/b_vignesh19_ibm_com
-├── Folder Path: /OC HANDOVER CIBC INTRIA/Daily Handover
+├── Folder Path: /OC HANDOVER CIBC INTRIA/Daily Handover/@{variables('varYear')}
 └── Name: @{variables('varMonthName')}
 ```
 
 **Configure run after**: Click 3 dots → Configure run after → Check all boxes (handles "already exists" error)
 
-#### 6. Save and Test
+#### 7. Save and Test
 - Click **Save**
 - Click **Test** → **Manually** → **Run flow**
 - Verify folder created in SharePoint
@@ -180,7 +251,7 @@ Value: @{variables('varDay')}_@{variables('varMonthName')}_@{variables('varYear'
 Action: Create new folder
 ├── Connector: SharePoint
 ├── Site Address: https://ibm-my.sharepoint.com/personal/b_vignesh19_ibm_com
-├── Folder Path: /OC HANDOVER CIBC INTRIA/Daily Handover/@{variables('varMonthName')}
+├── Folder Path: /OC HANDOVER CIBC INTRIA/Daily Handover/@{variables('varYear')}/@{variables('varMonthName')}
 └── Name: @{variables('varDailyFolderName')}
 ```
 
@@ -243,8 +314,8 @@ varNewFileName: India_Shift_1_@{variables('varDateString')}.xlsx
 #### 6. Initialize Paths
 
 ```
-varSourcePath: /OC HANDOVER CIBC INTRIA/Daily Handover/@{variables('varYesterdayMonth')}/@{variables('varYesterdayFolderName')}/@{variables('varSourceFileName')}
-varDestPath: /OC HANDOVER CIBC INTRIA/Daily Handover/@{variables('varMonthName')}/@{variables('varDailyFolderName')}
+varSourcePath: /OC HANDOVER CIBC INTRIA/Daily Handover/@{variables('varYesterdayYear')}/@{variables('varYesterdayMonth')}/@{variables('varYesterdayFolderName')}/@{variables('varSourceFileName')}
+varDestPath: /OC HANDOVER CIBC INTRIA/Daily Handover/@{variables('varYear')}/@{variables('varMonthName')}/@{variables('varDailyFolderName')}
 ```
 
 #### 7. Copy File (SharePoint)
@@ -286,8 +357,8 @@ At these minutes: 30
 ```
 varSourceFileName: India_Shift_1_@{variables('varDateString')}.xlsx
 varNewFileName: India_Shift_2_@{variables('varDateString')}.xlsx
-varSourcePath: /OC HANDOVER CIBC INTRIA/Daily Handover/@{variables('varMonthName')}/@{variables('varDailyFolderName')}/@{variables('varSourceFileName')}
-varDestPath: /OC HANDOVER CIBC INTRIA/Daily Handover/@{variables('varMonthName')}/@{variables('varDailyFolderName')}
+varSourcePath: /OC HANDOVER CIBC INTRIA/Daily Handover/@{variables('varYear')}/@{variables('varMonthName')}/@{variables('varDailyFolderName')}/@{variables('varSourceFileName')}
+varDestPath: /OC HANDOVER CIBC INTRIA/Daily Handover/@{variables('varYear')}/@{variables('varMonthName')}/@{variables('varDailyFolderName')}
 ```
 
 **Note**: Source and destination are in the same folder!
