@@ -1,50 +1,53 @@
-# OneDrive Shift Files Automation - Complete Documentation
+# Shift Files Automation - Complete Documentation
 
 ## 📋 Overview
 
-This project provides a complete solution for automating the creation of shift-based Excel files in OneDrive using Power Automate. The system automatically generates three shift files daily, organized in a hierarchical folder structure by month and date.
+This project provides a complete solution for automating the creation of shift-based Excel files using Power Automate and SharePoint. The system automatically generates three shift files daily using a **chain-copy workflow**, organized in a hierarchical folder structure by month and date.
 
 ## 🎯 What This System Does
 
-**Automated File Generation**:
-- Creates monthly folders (e.g., "May", "June")
-- Creates daily folders with format `DD_Month_YYYY` (e.g., "01_May_2026")
-- Generates 3 shift files per day at scheduled times:
-  - **Shift 1 (India)**: 6:30 AM IST
-  - **Shift 2 (India)**: 2:30 PM IST
-  - **Shift 3 (US-Canada)**: 10:30 PM IST
+**Automated File Generation using Chain-Copy Workflow**:
+- Creates monthly folders (e.g., "May", "June") at 6:00 AM on 1st of month
+- Creates daily folders with format `DD_Month_YYYY` (e.g., "01_May_2026") at 6:15 AM daily
+- Generates 3 shift files per day by **copying and renaming** the previous shift's file:
+  - **6:30 AM**: India Shift 1 (copies yesterday's US-CAN file)
+  - **2:30 PM**: India Shift 2 (copies today's Shift 1 file)
+  - **10:30 PM**: US-CAN Shift (copies today's Shift 2 file)
 
 **Example Output Structure**:
 ```
-OneDrive/Shift_Files/
+SharePoint/Daily Handover/
 └── May/
-    └── 01_May_2026/
-        ├── India_Shift_1_01-May-2026.xlsx
-        ├── India_Shift_2_01-May-2026.xlsx
-        └── US_CAN-Shift-01-May-2026.xlsx
+    └── 02_May_2026/
+        ├── India_Shift_1_02-May-2026.xlsx (copied from US_CAN-Shift-01-May-2026.xlsx)
+        ├── India_Shift_2_02-May-2026.xlsx (copied from India_Shift_1_02-May-2026.xlsx)
+        └── US_CAN-Shift-02-May-2026.xlsx (copied from India_Shift_2_02-May-2026.xlsx)
 ```
+
+**Key Feature**: Each file is created by copying the previous shift's file, maintaining data continuity across shifts.
 
 ## 📚 Documentation Files
 
 This repository contains comprehensive documentation for implementing and maintaining the automation system:
 
-### 1. **OneDrive_Shift_Files_Automation_Plan.md**
-   - Complete system architecture and design
-   - Detailed explanation of all 5 Power Automate flows
-   - Power Automate expressions and formulas
-   - Troubleshooting guide
-   - Alternative approaches and recommendations
-   - Cost considerations
-   - Security and permissions
-
-### 2. **Power_Automate_Flow_Configurations.md**
-   - Step-by-step configuration for each flow
-   - Detailed action-by-action instructions
+### 1. **SharePoint_Chain_Copy_Workflow_Guide.md** ⭐ PRIMARY GUIDE
+   - Complete chain-copy workflow explanation
+   - Step-by-step SharePoint flow configurations
+   - Detailed variable setup for date calculations
+   - Copy file actions with proper paths
    - Testing procedures
-   - Error handling setup
-   - Quick reference for expressions
+   - Troubleshooting for chain-copy scenarios
 
-### 3. **Quick_Reference_Guide.md**
+### 2. **OneDrive_Shift_Files_Automation_Plan.md** (Legacy - Template Approach)
+   - Original template-based system architecture
+   - Alternative approach using static templates
+   - Reference for understanding different approaches
+
+### 3. **Power_Automate_Flow_Configurations.md** (Legacy - Template Approach)
+   - Original template-based flow configurations
+   - Reference for OneDrive connector usage
+
+### 4. **Quick_Reference_Guide.md**
    - Visual diagrams and flowcharts
    - Daily timeline
    - Naming conventions
@@ -53,7 +56,7 @@ This repository contains comprehensive documentation for implementing and mainta
    - Monitoring dashboard
    - Maintenance checklist
 
-### 4. **Implementation_Checklist.md**
+### 5. **Implementation_Checklist.md**
    - Phase-by-phase implementation guide
    - Checkboxes for tracking progress
    - Testing procedures
@@ -61,52 +64,47 @@ This repository contains comprehensive documentation for implementing and mainta
    - Training and handover
    - Sign-off section
 
-### 5. **Using_Existing_Template_Guide.md** ⭐ NEW
-   - How to use your existing HO template file
-   - Template preparation steps
-   - Upload instructions
-   - Testing procedures
-   - Troubleshooting template issues
-   - Template maintenance guide
+### 6. **Using_Existing_Template_Guide.md** (Legacy - Not needed for chain-copy)
+   - Reference for template-based approach
+   - Not applicable for chain-copy workflow
 
 ## 🚀 Quick Start
 
 ### Prerequisites
-- Microsoft 365 account with OneDrive for Business
+- Microsoft 365 account with SharePoint access
 - Power Automate Premium license (or included in M365)
-- Appropriate permissions for OneDrive and Power Automate
-- **Your existing HO template file** ✅
+- Edit permissions for SharePoint site
+- **One initial file to start the chain** (e.g., US_CAN-Shift-01-May-2026.xlsx)
 
 ### Implementation Steps
 
-1. **Read the Documentation**
-   - Start with [`OneDrive_Shift_Files_Automation_Plan.md`](OneDrive_Shift_Files_Automation_Plan.md)
-   - Review the architecture and approach
+1. **Read the Primary Guide**
+   - Start with [`SharePoint_Chain_Copy_Workflow_Guide.md`](SharePoint_Chain_Copy_Workflow_Guide.md) ⭐
+   - Understand the chain-copy workflow logic
 
-2. **Prepare Your HO Template**
-   - Follow [`Using_Existing_Template_Guide.md`](Using_Existing_Template_Guide.md)
-   - Upload your HO template to OneDrive
-   - Verify template works correctly
+2. **Prepare Your SharePoint Environment**
+   - Create folder structure in SharePoint
+   - Upload one initial file (e.g., US_CAN-Shift-01-May-2026.xlsx)
+   - Verify you have edit permissions
 
-3. **Prepare Your Environment**
-   - Create folder structure in OneDrive: `/Shift_Files/Templates/`
-   - Upload your HO template file
-   - Verify template is accessible
+3. **Create the Flows**
+   - Follow the step-by-step guide in [`SharePoint_Chain_Copy_Workflow_Guide.md`](SharePoint_Chain_Copy_Workflow_Guide.md)
+   - Create all 5 flows in order:
+     1. Monthly Folder Creator
+     2. Daily Folder Creator
+     3. India Shift 1 Generator (copies from yesterday)
+     4. India Shift 2 Generator (copies from today's Shift 1)
+     5. US-CAN Shift Generator (copies from today's Shift 2)
 
-4. **Create the Flows**
-   - Follow [`Power_Automate_Flow_Configurations.md`](Power_Automate_Flow_Configurations.md)
-   - Create all 5 flows step-by-step
-   - Test each flow individually
+4. **Test Each Flow**
+   - Test manually before enabling automation
+   - Verify file copying and renaming works correctly
+   - Check date calculations for month transitions
 
-5. **Test and Deploy**
-   - Use [`Implementation_Checklist.md`](Implementation_Checklist.md)
-   - Complete all testing phases
-   - Enable flows for production
-
-6. **Monitor and Maintain**
-   - Use [`Quick_Reference_Guide.md`](Quick_Reference_Guide.md)
-   - Follow maintenance schedule
-   - Address issues promptly
+5. **Enable and Monitor**
+   - Enable all flows for automated runs
+   - Monitor for 24-48 hours
+   - Check flow run history daily
 
 ## 🏗️ System Architecture
 
@@ -118,38 +116,40 @@ This repository contains comprehensive documentation for implementing and mainta
 
 2. **Daily Folder Creator**
    - Runs: Every day at 6:15 AM IST
-   - Creates: Daily folder (e.g., "01_May_2026")
+   - Creates: Daily folder (e.g., "02_May_2026")
 
-3. **Shift 1 File Generator (India)**
+3. **India Shift 1 File Generator**
    - Runs: Every day at 6:30 AM IST
-   - Creates: India Shift 1 Excel file from your HO template
+   - Copies: Yesterday's US-CAN file → Renames to India_Shift_1_[today].xlsx
 
-4. **Shift 2 File Generator (India)**
+4. **India Shift 2 File Generator**
    - Runs: Every day at 2:30 PM IST
-   - Creates: India Shift 2 Excel file from your HO template
+   - Copies: Today's India Shift 1 file → Renames to India_Shift_2_[today].xlsx
 
-5. **Shift 3 File Generator (US-Canada)**
+5. **US-Canada Shift File Generator**
    - Runs: Every day at 10:30 PM IST
-   - Creates: US-Canada Shift Excel file from your HO template
+   - Copies: Today's India Shift 2 file → Renames to US_CAN-Shift-[today].xlsx
 
 ### Why This Approach?
 
-✅ **Reliability**: Each flow handles one specific task  
-✅ **Maintainability**: Easy to troubleshoot individual components  
-✅ **Flexibility**: Can modify or disable individual flows  
-✅ **Scalability**: Easy to add more shifts or modify schedules  
-✅ **No Coding Required**: Uses Power Automate's visual designer  
-✅ **Uses Your Existing Template**: Preserves your HO file formatting and formulas
+✅ **Data Continuity**: Each file carries over data from previous shift
+✅ **No Template Needed**: Uses actual working files as source
+✅ **Reliability**: Each flow handles one specific task
+✅ **Maintainability**: Easy to troubleshoot individual components
+✅ **Flexibility**: Can modify or disable individual flows
+✅ **No Coding Required**: Uses Power Automate's visual designer
+✅ **SharePoint Integration**: Works with existing SharePoint structure
 
 ## 🔧 Key Features
 
 - **Automatic Folder Creation**: Monthly and daily folders created automatically
-- **Template-Based Files**: All files copied from your existing HO template
-- **Duplicate Prevention**: Checks if files exist before creating
+- **Chain-Copy Workflow**: Each file created by copying previous shift's file
+- **Data Continuity**: Maintains data flow across shifts
+- **Duplicate Prevention**: Replaces existing files if needed
 - **Error Handling**: Robust error handling with notifications
 - **Time Zone Support**: Properly handles India Standard Time (IST)
-- **Email Notifications**: Optional success/failure notifications
-- **Formatting Preservation**: Your HO template formatting maintained in all files
+- **Month Transition**: Handles copying from previous month automatically
+- **SharePoint Native**: Uses SharePoint connector for reliability
 
 ## 📊 File Naming Convention
 
@@ -168,16 +168,17 @@ This repository contains comprehensive documentation for implementing and mainta
 ## 🛠️ Technology Stack
 
 - **Cloud Platform**: Microsoft 365
-- **Storage**: OneDrive for Business
+- **Storage**: SharePoint Online
 - **Automation**: Power Automate (Cloud Flows)
 - **File Format**: Microsoft Excel (.xlsx)
 - **Time Zone**: India Standard Time (UTC+5:30)
-- **Template**: Your existing HO template file
+- **Workflow**: Chain-copy (each file copies from previous)
 
 ## 📈 Expected Results
 
 ### Daily
-- 3 Excel files created automatically from your HO template
+- 3 Excel files created automatically via chain-copy
+- Each file contains data from previous shift
 - Files available at scheduled times
 - Proper folder organization maintained
 
@@ -211,9 +212,8 @@ This repository contains comprehensive documentation for implementing and mainta
 ## 🆘 Troubleshooting
 
 Common issues and solutions are documented in:
-- [`OneDrive_Shift_Files_Automation_Plan.md`](OneDrive_Shift_Files_Automation_Plan.md) - Detailed troubleshooting section
+- [`SharePoint_Chain_Copy_Workflow_Guide.md`](SharePoint_Chain_Copy_Workflow_Guide.md) - Comprehensive troubleshooting
 - [`Quick_Reference_Guide.md`](Quick_Reference_Guide.md) - Quick fixes
-- [`Using_Existing_Template_Guide.md`](Using_Existing_Template_Guide.md) - Template-specific issues
 
 ### Quick Fixes
 
@@ -227,14 +227,15 @@ Common issues and solutions are documented in:
 - Set time zone to 'India Standard Time'
 
 **File not created?**
-- Verify HO template file exists at `/Shift_Files/Templates/`
-- Check folder path
+- Verify source file exists (previous shift's file)
+- Check folder paths in SharePoint
 - Review flow run history
+- Ensure previous flow completed successfully
 
-**Template formatting lost?**
-- See [`Using_Existing_Template_Guide.md`](Using_Existing_Template_Guide.md)
-- Test manual copy first
-- Check template compatibility
+**Wrong file copied?**
+- Check date calculations
+- Verify time zone settings
+- Test with Compose actions to debug dates
 
 ## 📞 Support
 
@@ -252,18 +253,18 @@ Common issues and solutions are documented in:
 ## 🎓 Learning Path
 
 ### For Beginners
-1. Start with [`Quick_Reference_Guide.md`](Quick_Reference_Guide.md)
-2. Read [`Using_Existing_Template_Guide.md`](Using_Existing_Template_Guide.md)
-3. Understand the folder structure and naming conventions
-4. Learn basic Power Automate concepts
-5. Follow [`Power_Automate_Flow_Configurations.md`](Power_Automate_Flow_Configurations.md) step-by-step
+1. Start with [`SharePoint_Chain_Copy_Workflow_Guide.md`](SharePoint_Chain_Copy_Workflow_Guide.md) ⭐
+2. Understand the chain-copy concept
+3. Follow the step-by-step flow creation guide
+4. Test each flow individually
+5. Monitor automated runs
 
 ### For Experienced Users
-1. Review [`OneDrive_Shift_Files_Automation_Plan.md`](OneDrive_Shift_Files_Automation_Plan.md)
-2. Understand the architecture decisions
-3. Prepare your HO template using the guide
-4. Customize flows for your specific needs
-5. Implement advanced features
+1. Review [`SharePoint_Chain_Copy_Workflow_Guide.md`](SharePoint_Chain_Copy_Workflow_Guide.md)
+2. Understand the date calculation logic
+3. Customize for month transitions
+4. Add error handling enhancements
+5. Implement monitoring and alerts
 
 ## 🔐 Security Considerations
 
@@ -271,9 +272,9 @@ Common issues and solutions are documented in:
 - Enable MFA for automation account
 - Apply principle of least privilege
 - Regular permission audits
-- Enable audit logging
-- Backup HO template file regularly
-- Version control for template changes
+- Enable audit logging in SharePoint
+- Backup important files regularly
+- Monitor flow run history
 
 ## 💰 Cost Considerations
 
@@ -282,11 +283,11 @@ Common issues and solutions are documented in:
 - Power Automate Premium for unlimited runs
 - Estimated: ~1,472 runs per year
 
-### OneDrive Storage
-- Each file: ~50 KB (depends on your HO template size)
-- Daily files: 150 KB (3 shifts)
-- Monthly: ~4.5 MB (30 days)
-- Yearly: ~54 MB
+### SharePoint Storage
+- Each file: Size depends on your actual working files
+- Daily files: 3 files per day
+- Monthly: ~90 files (30 days × 3 shifts)
+- Yearly: ~1,095 files
 - Implement retention policy to manage storage
 
 ## 🔄 Maintenance Schedule
@@ -301,8 +302,8 @@ Common issues and solutions are documented in:
 
 ### Monthly
 - Audit folder structure
-- Update HO template if needed
-- Review performance
+- Review file sizes and storage
+- Check for any anomalies in copied files
 
 ### Quarterly
 - Comprehensive system review
@@ -313,8 +314,9 @@ Common issues and solutions are documented in:
 
 | Version | Date | Description |
 |---------|------|-------------|
-| 1.0 | May 2026 | Initial documentation and implementation plan |
+| 1.0 | May 2026 | Initial documentation - template-based approach |
 | 1.1 | May 2026 | Added guide for using existing HO template |
+| 2.0 | May 6, 2026 | Major update - SharePoint chain-copy workflow |
 
 ## 🤝 Contributing
 
@@ -338,7 +340,7 @@ Use [`Implementation_Checklist.md`](Implementation_Checklist.md) to track your i
 - ✅ Zero manual intervention required
 - ✅ Files available on time
 - ✅ Consistent naming and structure
-- ✅ HO template formatting preserved
+- ✅ Data continuity across shifts maintained
 - ✅ No duplicate files
 - ✅ Reliable 24/7 operation
 
@@ -358,23 +360,24 @@ For questions or support regarding this automation system, contact your IT team 
 
 Ready to implement? Follow these steps:
 
-1. ✅ Read [`OneDrive_Shift_Files_Automation_Plan.md`](OneDrive_Shift_Files_Automation_Plan.md)
-2. ✅ Prepare your HO template using [`Using_Existing_Template_Guide.md`](Using_Existing_Template_Guide.md)
-3. ✅ Open [`Implementation_Checklist.md`](Implementation_Checklist.md)
-4. ✅ Start with Phase 1: Prerequisites and Setup
-5. ✅ Follow [`Power_Automate_Flow_Configurations.md`](Power_Automate_Flow_Configurations.md) for each flow
-6. ✅ Use [`Quick_Reference_Guide.md`](Quick_Reference_Guide.md) as your daily reference
+1. ✅ Read [`SharePoint_Chain_Copy_Workflow_Guide.md`](SharePoint_Chain_Copy_Workflow_Guide.md) ⭐
+2. ✅ Understand the chain-copy workflow concept
+3. ✅ Prepare your SharePoint environment
+4. ✅ Create all 5 flows following the guide
+5. ✅ Test each flow individually
+6. ✅ Enable automated runs and monitor
 
 **Good luck with your implementation!** 🎉
 
 ---
 
-## 💡 Important Note About Your HO Template
+## 💡 Important Note About Chain-Copy Workflow
 
-Since you already have an existing HO template file, make sure to:
-- Read [`Using_Existing_Template_Guide.md`](Using_Existing_Template_Guide.md) first
-- Upload your template to `/Shift_Files/Templates/` in OneDrive
-- Test that the template works correctly when copied
-- Keep a backup of your original template file
+This system uses a **chain-copy approach** where:
+- Each shift file is created by copying the previous shift's file
+- Data flows continuously from one shift to the next
+- No static template is needed
+- The first file of each day copies from yesterday's last file
+- Month transitions are handled automatically
 
-The automation will use your HO template to create all shift files, preserving all your formatting, formulas, and data structures.
+**Key Benefit**: Maintains data continuity across shifts and days!

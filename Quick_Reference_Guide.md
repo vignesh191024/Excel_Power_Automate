@@ -1,34 +1,49 @@
-# Quick Reference Guide - OneDrive Shift Files Automation
+# Quick Reference Guide - Shift Files Automation
 
 ## System Overview
 
-This automated system creates shift-based Excel files in OneDrive with a hierarchical folder structure organized by month and date.
+This automated system creates shift-based Excel files in SharePoint using a **chain-copy workflow** with a hierarchical folder structure organized by month and date.
+
+**Key Concept**: Each shift file is created by copying and renaming the previous shift's file, maintaining data continuity.
 
 ## Folder Structure
 
 ```
-OneDrive Root
-└── Shift_Files/
-    ├── Templates/
-    │   └── Shift_Template.xlsx (Master template)
-    │
-    ├── May/                    (Created monthly at 6:00 AM)
-    │   ├── 01_May_2026/        (Created daily at 6:15 AM)
-    │   │   ├── India_Shift_1_01-May-2026.xlsx (6:30 AM)
-    │   │   ├── India_Shift_2_01-May-2026.xlsx (2:30 PM)
-    │   │   └── US_CAN-Shift-01-May-2026.xlsx (10:30 PM)
-    │   │
-    │   ├── 02_May_2026/
-    │   │   ├── India_Shift_1_02-May-2026.xlsx
-    │   │   ├── India_Shift_2_02-May-2026.xlsx
-    │   │   └── US_CAN-Shift-02-May-2026.xlsx
-    │   │
-    │   └── 03_May_2026/
-    │       └── ... (continues daily)
-    │
-    └── June/                   (Created on June 1st)
-        └── 01_June_2026/
-            └── ... (continues)
+SharePoint/Daily Handover/
+├── May/                        (Created monthly at 6:00 AM)
+│   ├── 01_May_2026/            (Created daily at 6:15 AM)
+│   │   └── US_CAN-Shift-01-May-2026.xlsx (Initial file - manual)
+│   │
+│   ├── 02_May_2026/            (Created daily at 6:15 AM)
+│   │   ├── India_Shift_1_02-May-2026.xlsx (6:30 AM - copied from US_CAN-Shift-01-May-2026.xlsx)
+│   │   ├── India_Shift_2_02-May-2026.xlsx (2:30 PM - copied from India_Shift_1_02-May-2026.xlsx)
+│   │   └── US_CAN-Shift-02-May-2026.xlsx (10:30 PM - copied from India_Shift_2_02-May-2026.xlsx)
+│   │
+│   ├── 03_May_2026/
+│   │   ├── India_Shift_1_03-May-2026.xlsx (copied from US_CAN-Shift-02-May-2026.xlsx)
+│   │   └── ... (continues)
+│   │
+│   └── 04_May_2026/
+│       └── ... (continues daily)
+│
+└── June/                       (Created on June 1st at 6:00 AM)
+    └── 01_June_2026/
+        └── ... (continues)
+```
+
+## Chain-Copy Flow
+
+```
+Day 1: US_CAN-Shift-01-May-2026.xlsx (manual)
+         ↓
+Day 2: 6:30 AM  → India_Shift_1_02-May-2026.xlsx
+         ↓
+       2:30 PM  → India_Shift_2_02-May-2026.xlsx
+         ↓
+       10:30 PM → US_CAN-Shift-02-May-2026.xlsx
+         ↓
+Day 3: 6:30 AM  → India_Shift_1_03-May-2026.xlsx
+       (continues...)
 ```
 
 ## Daily Timeline
@@ -67,24 +82,24 @@ graph TB
         E[Shift 3 Flow<br/>Every day, 10:30 PM]
     end
     
-    subgraph "OneDrive Structure"
+    subgraph "SharePoint Structure"
         F[Month Folder<br/>e.g., May]
-        G[Daily Folder<br/>e.g., 01_May_2026]
-        H[Shift 1 File]
-        I[Shift 2 File]
-        J[Shift 3 File]
+        G[Daily Folder<br/>e.g., 02_May_2026]
+        H[India Shift 1 File<br/>copied from yesterday's US-CAN]
+        I[India Shift 2 File<br/>copied from today's Shift 1]
+        J[US-CAN Shift File<br/>copied from today's Shift 2]
     end
     
     A -->|Creates| F
     B -->|Creates| G
-    C -->|Creates| H
-    D -->|Creates| I
-    E -->|Creates| J
+    C -->|Copies & Renames| H
+    D -->|Copies & Renames| I
+    E -->|Copies & Renames| J
     
     F --> G
     G --> H
-    G --> I
-    G --> J
+    H --> I
+    I --> J
     
     style A fill:#e1f5ff
     style B fill:#fff4e1
@@ -98,27 +113,32 @@ graph TB
 ### Flow 1: Monthly Folder Creator
 - **Trigger**: 1st of each month at 6:00 AM IST
 - **Purpose**: Creates month folder (e.g., "May")
-- **Output**: `/Shift_Files/May/`
+- **Platform**: SharePoint
+- **Output**: `/Daily Handover/May/`
 
 ### Flow 2: Daily Folder Creator
 - **Trigger**: Every day at 6:15 AM IST
 - **Purpose**: Creates daily folder with format `DD_Month_YYYY`
-- **Output**: `/Shift_Files/May/01_May_2026/`
+- **Platform**: SharePoint
+- **Output**: `/Daily Handover/May/02_May_2026/`
 
-### Flow 3: Shift 1 File Generator
+### Flow 3: India Shift 1 File Generator
 - **Trigger**: Every day at 6:30 AM IST
-- **Purpose**: Creates Shift 1 Excel file
-- **Output**: `India_Shift_1_01-May-2026.xlsx`
+- **Purpose**: Copies yesterday's US-CAN file and renames to India Shift 1
+- **Source**: `US_CAN-Shift-01-May-2026.xlsx` (from yesterday)
+- **Output**: `India_Shift_1_02-May-2026.xlsx` (today)
 
-### Flow 4: Shift 2 File Generator
+### Flow 4: India Shift 2 File Generator
 - **Trigger**: Every day at 2:30 PM IST
-- **Purpose**: Creates Shift 2 Excel file
-- **Output**: `India_Shift_2_01-May-2026.xlsx`
+- **Purpose**: Copies today's India Shift 1 file and renames to India Shift 2
+- **Source**: `India_Shift_1_02-May-2026.xlsx` (from today)
+- **Output**: `India_Shift_2_02-May-2026.xlsx` (today)
 
-### Flow 5: Shift 3 File Generator
+### Flow 5: US-Canada Shift File Generator
 - **Trigger**: Every day at 10:30 PM IST
-- **Purpose**: Creates Shift 3 Excel file (US-Canada)
-- **Output**: `US_CAN-Shift-01-May-2026.xlsx`
+- **Purpose**: Copies today's India Shift 2 file and renames to US-CAN
+- **Source**: `India_Shift_2_02-May-2026.xlsx` (from today)
+- **Output**: `US_CAN-Shift-02-May-2026.xlsx` (today)
 
 ## File Naming Convention
 
@@ -179,17 +199,27 @@ Output: `01-May-2026`
 ```
 Output: `01_May_2026`
 
-### Build File Name (Shift 1 & 2)
+### Build Source File Name (Yesterday's US-CAN for Shift 1)
+```
+US_CAN-Shift-@{variables('varYesterdayDateString')}.xlsx
+```
+Output: `US_CAN-Shift-01-May-2026.xlsx`
+
+### Build New File Name (Today's India Shift 1)
 ```
 India_Shift_1_@{variables('varDateString')}.xlsx
 ```
-Output: `India_Shift_1_01-May-2026.xlsx`
+Output: `India_Shift_1_02-May-2026.xlsx`
 
-### Build File Name (Shift 3 - US-Canada)
+### Build Source Path (Yesterday's folder)
 ```
-US_CAN-Shift-@{variables('varDateString')}.xlsx
+/OC HANDOVER CIBC INTRIA/Daily Handover/@{variables('varYesterdayMonth')}/@{variables('varYesterdayFolderName')}/@{variables('varSourceFileName')}
 ```
-Output: `US_CAN-Shift-01-May-2026.xlsx`
+
+### Build Destination Path (Today's folder)
+```
+/OC HANDOVER CIBC INTRIA/Daily Handover/@{variables('varMonthName')}/@{variables('varDailyFolderName')}
+```
 
 ## Common Tasks
 
@@ -318,16 +348,17 @@ flowchart TD
 | Role | Contact | Purpose |
 |------|---------|---------|
 | Power Automate Admin | admin@company.com | Flow issues, permissions |
-| OneDrive Admin | onedrive-admin@company.com | Storage, access issues |
-| Shift Manager | shift-manager@company.com | File content, template updates |
+| SharePoint Admin | sharepoint-admin@company.com | Storage, access issues |
+| Shift Manager | shift-manager@company.com | File content, data issues |
 | IT Support | it-support@company.com | Technical issues |
 
 ## Important Links
 
 - [Power Automate Portal](https://make.powerautomate.com)
-- [OneDrive for Business](https://onedrive.live.com)
+- [SharePoint Site](https://ibm-my.sharepoint.com/personal/b_vignesh19_ibm_com)
 - [Power Automate Documentation](https://docs.microsoft.com/power-automate/)
-- [OneDrive Connector Reference](https://docs.microsoft.com/connectors/onedrive/)
+- [SharePoint Connector Reference](https://docs.microsoft.com/connectors/sharepointonline/)
+- [SharePoint Chain-Copy Workflow Guide](SharePoint_Chain_Copy_Workflow_Guide.md) ⭐
 
 ## Monthly Maintenance Checklist
 
@@ -352,10 +383,10 @@ flowchart TD
 ## Success Metrics
 
 ### Daily
-- ✅ 3 files created per day
+- ✅ 3 files created per day via chain-copy
 - ✅ Files created on time (±5 minutes)
-- ✅ No duplicate files
-- ✅ Template formatting preserved
+- ✅ Data continuity maintained across shifts
+- ✅ Proper file naming and organization
 
 ### Weekly
 - ✅ 21 files created (7 days × 3 shifts)
@@ -366,24 +397,26 @@ flowchart TD
 - ✅ ~90 files created (30 days × 3 shifts)
 - ✅ Proper folder structure maintained
 - ✅ All flows running smoothly
+- ✅ Chain-copy workflow functioning correctly
 - ✅ Storage within limits
 
 ## Quick Start Guide
 
 ### For New Users
 
-1. **Access OneDrive**
-   - Go to OneDrive for Business
-   - Navigate to `/Shift_Files/`
+1. **Access SharePoint**
+   - Go to SharePoint site
+   - Navigate to `/Daily Handover/`
 
 2. **Find Today's Files**
    - Open current month folder (e.g., `May`)
-   - Open today's folder (e.g., `01_May_2026`)
-   - Files are named by shift number
+   - Open today's folder (e.g., `06_May_2026`)
+   - Files are named by shift (India_Shift_1, India_Shift_2, US_CAN-Shift)
 
 3. **Use the Files**
    - Open the appropriate shift file
-   - Fill in your data
+   - Data from previous shift is already there
+   - Update with new information
    - Save when done
 
 ### For Administrators
@@ -393,10 +426,10 @@ flowchart TD
    - Review run history
    - Address any failures immediately
 
-2. **Maintain Template**
-   - Keep template file updated
-   - Test changes before deploying
-   - Backup template regularly
+2. **Monitor Chain-Copy**
+   - Verify each file copies correctly
+   - Check data continuity
+   - Monitor for month transitions
 
 3. **Manage Storage**
    - Monitor OneDrive usage
@@ -407,7 +440,8 @@ flowchart TD
 
 | Version | Date | Changes |
 |---------|------|---------|
-| 1.0 | May 2026 | Initial implementation |
+| 1.0 | May 2026 | Initial implementation - template approach |
+| 2.0 | May 6, 2026 | Updated for SharePoint chain-copy workflow |
 
 ---
 
